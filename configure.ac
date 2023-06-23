@@ -50,6 +50,7 @@ AC_CHECK_HEADERS([byteswap.h])
 
 AC_DEFINE([_XOPEN_SOURCE], [600], [Define to 500 if Single Unix conformance is wanted, 600 for sixth revision.])
 AC_DEFINE([_BSD_SOURCE], [1], [Define on BSD to activate all library features])
+AC_DEFINE([_DEFAULT_SOURCE], [1], [Prevent deprecation warning from _BSD_SOURCE])
 
 CFLAGS="$CFLAGS -std=c99"
 
