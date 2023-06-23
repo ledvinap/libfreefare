@@ -124,6 +124,30 @@ mifare_desfire_key_get_version(MifareDESFireKey key)
     return version;
 }
 
+enum mifare_key_type
+mifare_desfire_key_get_type(MifareDESFireKey key)
+{
+    return key->type;
+}
+
+size_t
+mifare_desfire_key_get_keydata(MifareDESFireKey key, uint8_t* data)
+{
+    data = key->data;
+    switch(key->type) {
+    case MIFARE_KEY_DES:
+        return 8;
+    case MIFARE_KEY_2K3DES:
+        return 16;
+    case MIFARE_KEY_3K3DES:
+        return 24;
+    case MIFARE_KEY_AES128:
+        return 16;
+    default:
+        return 0;
+    }
+}
+
 void
 mifare_desfire_key_set_version(MifareDESFireKey key, uint8_t version)
 {

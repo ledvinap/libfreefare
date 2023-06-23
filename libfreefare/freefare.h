@@ -46,6 +46,8 @@ FreefareTag	 freefare_tag_new(nfc_device *device, nfc_target target);
 enum freefare_tag_type freefare_get_tag_type(FreefareTag tag);
 const char	*freefare_get_tag_friendly_name(FreefareTag tag);
 char		*freefare_get_tag_uid(FreefareTag tag);
+int              freefare_get_tag_uid_raw(FreefareTag tag, uint8_t** uid);
+nfc_target      *freefare_get_tag_target(FreefareTag tag);
 void		 freefare_free_tag(FreefareTag tag);
 void		 freefare_free_tags(FreefareTag *tags);
 bool		 freefare_selected_tag_is_present(nfc_device *device);
@@ -396,7 +398,7 @@ uint8_t		 mifare_desfire_last_picc_error(FreefareTag tag);
 #pragma pack (push)
 #pragma pack (1)
 struct mifare_desfire_version_info {
-    struct {
+    struct mifare_desfire_version_info_hw {
 	uint8_t vendor_id;
 	uint8_t type;
 	uint8_t subtype;
@@ -405,7 +407,7 @@ struct mifare_desfire_version_info {
 	uint8_t storage_size;
 	uint8_t protocol;
     } hardware;
-    struct {
+    struct mifare_desfire_version_info_sw {
 	uint8_t vendor_id;
 	uint8_t type;
 	uint8_t subtype;
@@ -522,6 +524,8 @@ MifareDESFireKey mifare_desfire_aes_key_new(const uint8_t value[16]);
 MifareDESFireKey mifare_desfire_aes_key_new_with_version(const uint8_t value[16], uint8_t version);
 uint8_t		 mifare_desfire_key_get_version(MifareDESFireKey key);
 void		 mifare_desfire_key_set_version(MifareDESFireKey key, uint8_t version);
+enum mifare_key_type mifare_desfire_key_get_type(MifareDESFireKey key);
+size_t           mifare_desfire_key_get_keydata(MifareDESFireKey key, uint8_t* data);
 void		 mifare_desfire_key_free(MifareDESFireKey key);
 
 uint8_t		*tlv_encode(const uint8_t type, const uint8_t *istream, uint16_t isize, size_t *osize);

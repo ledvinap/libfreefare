@@ -173,19 +173,33 @@ char *
 freefare_get_tag_uid(FreefareTag tag)
 {
     char *res = NULL;
+    uint8_t *uid;
+    int uid_len;
+    uid_len = freefare_get_tag_uid_raw(tag, &uid);
+    if (uid_len >= 0) {
+        res = malloc(2 * uid_len + 1);
+        for (int i = 0; i < uid_len; i++)
+            snprintf(res + 2 * i, 3, "%02x", uid[i]);
+    } else {
+	res = strdup("UNKNOWN");
+    }
+    return res;
+}
+
+/* Get UID of provided tag
+   UID will point into into tag structure
+   Returns UID length, negative on error / unknown tag
+*/
+int
+freefare_get_tag_uid_raw(FreefareTag tag, uint8_t** uid)
+{
     switch (tag->info.nm.nmt) {
     case NMT_FELICA:
-	if ((res = malloc(17))) {
-	    for (size_t i = 0; i < 8; i++)
-		snprintf(res + 2 * i, 3, "%02x", tag->info.nti.nfi.abtId[i]);
-	}
-	break;
+        if (uid) *uid = tag->info.nti.nfi.abtId;
+        return 8; // sizeof(tag->info.nti.nfi.abtId);
     case NMT_ISO14443A:
-	if ((res = malloc(2 * tag->info.nti.nai.szUidLen + 1))) {
-	    for (size_t i = 0; i < tag->info.nti.nai.szUidLen; i++)
-		snprintf(res + 2 * i, 3, "%02x", tag->info.nti.nai.abtUid[i]);
-	}
-	break;
+        if (uid) *uid = tag->info.nti.nai.abtUid;
+        return tag->info.nti.nai.szUidLen;
     case NMT_DEP:
     case NMT_ISO14443B2CT:
     case NMT_ISO14443B2SR:
@@ -193,9 +207,14 @@ freefare_get_tag_uid(FreefareTag tag)
     case NMT_ISO14443BI:
     case NMT_JEWEL:
     case NMT_BARCODE:
-	res = strdup("UNKNOWN");
+	return -1;
     }
-    return res;
+}
+
+nfc_target *
+freefare_get_tag_target(FreefareTag tag)
+{
+    return &tag->info;
 }
 
 /*
