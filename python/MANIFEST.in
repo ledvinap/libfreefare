@@ -1,0 +1,1 @@
+include pyfreefare/*.pyx pyfreefare/*.pxd

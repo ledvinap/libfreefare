@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools", "Cython"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyfreefare"
+version = "0.1.0"
+authors = [
+    {name = "Petr Ledvina", email = "ledvinap@gmail.com"},
+]
+description = "Pythons binding for libfreefare"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Cython",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+[options]
+zip_safe = false
+packages = ["pyfreefare"]
